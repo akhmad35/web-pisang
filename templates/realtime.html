@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time - Deteksi Pisang</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        /* ── Page-specific styles ── */
+        body {
+            background: #000;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: rgba(0,0,0,0.9);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+            border-bottom: 1px solid rgba(253,180,98,0.2);
+        }
+
+        h1 {
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+        }
+
+        .spacer { width: 44px; }
+
+        /* ── Camera view ── */
+        .camera-section {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #video { width: 100%; height: 100%; object-fit: cover; }
+
+        .focus-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px; height: 280px;
+            border: 3px dashed var(--primary);
+            border-radius: 12px;
+            pointer-events: none;
+            opacity: 0.5;
+            animation: focusPulse 2s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        /* ── Status bar ── */
+        .status-bar {
+            position: absolute;
+            bottom: 16px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            z-index: 3;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(253,180,98,0.3);
+        }
+
+        #canvas { display: none; }
+
+        /* ── Result overlay (bottom sheet style) ── */
+        .result-overlay {
+            display: none;
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px 24px;
+            z-index: 5;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 -8px 40px rgba(0,0,0,0.3);
+        }
+
+        .result-overlay.show { display: block; }
+
+        .drag-handle {
+            width: 40px; height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        /* Compact info grid for overlay */
+        .result-overlay .info-grid {
+            grid-template-columns: 1fr 1fr;
+            margin-bottom: 12px;
+        }
+
+        .result-overlay .info-item { padding: 12px 14px; }
+        .result-overlay .tips { margin-bottom: 0; }
+        .result-overlay .status-badge { margin-bottom: 16px; padding: 16px; }
+        .result-overlay .status-icon { font-size: 40px; }
+
+        /* ── Bottom controls ── */
+        .controls {
+            background: rgba(0,0,0,0.95);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            z-index: 10;
+            border-top: 1px solid rgba(253,180,98,0.2);
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1em; }
+            .focus-ring { width: 200px; height: 200px; }
+            .result-overlay { padding: 16px; }
+            .info-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="back-btn">←</a>
+            <h1>Mode Real-time</h1>
+            <div class="spacer"></div>
+        </header>
+
+        <div class="camera-section">
+            <video id="video" autoplay playsinline muted></video>
+            <div class="focus-ring"></div>
+
+            <div class="status-bar" id="realtimeStatus">🎥 Memulai kamera...</div>
+
+            <!-- Result overlay (bottom sheet) -->
+            <div class="result-overlay" id="resultOverlay">
+                <div class="drag-handle"></div>
+
+                <div class="status-badge" id="statusBadge">
+                    <div class="status-icon" id="statusIcon">🍌</div>
+                    <div class="status-content">
+                        <div class="status-label" id="statusLabel">Menunggu deteksi...</div>
+                        <div class="status-desc" id="statusDesc">Arahkan kamera ke pisang</div>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="info-value" id="infoStatus">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Rekomendasi</div>
+                        <div class="info-value" id="infoRecommend">-</div>
+                    </div>
+                </div>
+
+                <div class="tips">
+                    <strong>💡 Tips:</strong>
+                    <div id="tipsText">Deteksi berjalan otomatis tiap 1,5 detik.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <a href="/" class="btn btn-secondary">← Kembali</a>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script src="/static/js/banana.js"></script>
+    <script src="/static/js/realtime.js"></script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+/* =============================================
+   style.css — Deteksi Kematangan Pisang
+   Shared styles for all pages
+   ============================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #FDB462;
+    --primary-dark: #2D5016;
+    --secondary: #FFD89B;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #D4483C;
+    --dark: #1a1a1a;
+    --light: #FFFBF5;
+    --gray: #8B6F47;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: var(--dark);
+    min-height: 100vh;
+}
+
+/* ── Animations ── */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-20px); }
+}
+
+@keyframes focusPulse {
+    0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+    50%       { opacity: 0.7; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+/* ── Shared Header ── */
+.back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--primary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 22px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: var(--dark);
+}
+
+.back-btn:hover {
+    background: var(--primary-dark);
+    color: white;
+    transform: scale(1.08);
+}
+
+/* ── Shared Result / Status Badge ── */
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 24px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    background: #f9f9f9;
+}
+
+.status-icon { font-size: 56px; display: inline-block; }
+
+.status-badge.unripe  { border-left: 5px solid var(--success); background: rgba(16,185,129,0.08); }
+.status-badge.ripe    { border-left: 5px solid var(--warning); background: rgba(245,158,11,0.08); }
+.status-badge.overripe{ border-left: 5px solid var(--danger);  background: rgba(212,72,60,0.08);  }
+.status-badge.rotten  { border-left: 5px solid #6B7280;        background: rgba(107,114,128,0.08);}
+
+.status-content { flex: 1; }
+
+.status-label {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 6px;
+}
+
+.status-badge.unripe  .status-label { color: var(--success); }
+.status-badge.ripe    .status-label { color: var(--warning); }
+.status-badge.overripe.status-label { color: var(--danger);  }
+.status-badge.rotten  .status-label { color: #6B7280; }
+
+.status-desc { font-size: 0.95em; color: #666; }
+
+/* ── Shared Info Grid ── */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.info-item {
+    background: #f9f9f9;
+    padding: 18px;
+    border-radius: 12px;
+    border-left: 3px solid var(--primary);
+}
+
+.info-label {
+    font-size: 0.8em;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.info-value {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+/* ── Shared Tips Box ── */
+.tips {
+    background: linear-gradient(135deg, rgba(253,180,98,0.12) 0%, rgba(253,180,98,0.05) 100%);
+    padding: 18px;
+    border-radius: 12px;
+    border-left: 4px solid var(--primary);
+    margin-bottom: 24px;
+    font-size: 0.95em;
+    color: #555;
+    line-height: 1.8;
+}
+
+.tips strong {
+    color: var(--primary-dark);
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* ── Shared Loading Spinner ── */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(253,180,98,0.2);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 20px;
+}
+
+/* ── Shared Buttons ── */
+.btn {
+    padding: 14px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, #FFC565 100%);
+    color: var(--dark);
+    box-shadow: 0 4px 15px rgba(253,180,98,0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(253,180,98,0.4);
+}
+
+.btn-secondary {
+    background: rgba(253,180,98,0.2);
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+
+.btn-secondary:hover {
+    background: var(--primary);
+    color: var(--dark);
+}
+
+.btn-muted {
+    background: #f0f0f0;
+    color: var(--dark);
+}
+
+.btn-muted:hover { background: #e0e0e0; }
+
+/* ── Error box ── */
+.error {
+    background: rgba(212,72,60,0.1);
+    border-left: 4px solid var(--danger);
+    color: var(--danger);
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.error.show { display: block; }
