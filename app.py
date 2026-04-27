@@ -10,7 +10,7 @@ app = Flask(__name__)
 # Load model MobileNetV3
 model = load_model("banana_mobilenetv3.h5", compile=False)
 
-model.save("banana_fixed.keras")
+model.save("model/banana_fixed.keras")
 
 CATEGORIES = ["overripe", "ripe", "rotten", "unripe"]
 
