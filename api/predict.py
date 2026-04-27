@@ -1,10 +1,15 @@
-from http.server import BaseHTTPRequestHandler
-import json
+from flask import Flask, request, jsonify
+import os
 
-class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type','application/json')
-        self.end_headers()
+app = Flask(__name__)
 
-        self.wfile.write(json.dumps({"status": "API jalan"}).encode())
+@app.route("/")
+def home():
+    return "Flask API is running on Vercel 🚀"
+
+@app.route("/predict")
+def predict():
+    return jsonify({"message": "API working"})
+
+# wajib untuk Vercel
+app = app
