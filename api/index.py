@@ -4,8 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "🚀 Flask on Vercel is working!"
+    return "API running 🚀"
 
-# WAJIB untuk Vercel
-def handler(environ, start_response):
-    return app(environ, start_response)
+if __name__ == "__main__":
+    app.run()
